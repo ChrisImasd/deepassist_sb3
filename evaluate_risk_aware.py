@@ -1,14 +1,28 @@
 import numpy as np
 from stable_baselines3 import DQN
 
+import risk_aware_policy
 from shared_autonomy_env import SharedAutonomyEnv
+from pilot_policies import sensor_pilot
 from full_pilot import FullPilot
 from risk_aware_policy import risk_aware_action, build_copilot_obs
+
+def make_pilot(pilot_name: str):
+    if pilot_name == "full":
+        return FullPilot("models/full_pilot.zip")
+
+    elif pilot_name == "sensor":
+        return sensor_pilot
+
+    else:
+        raise ValueError(f"Unknown pilot_name: {pilot_name}")
 
 
 def run_episode(env, pilot, copilot_model, mode: str):
     obs, _ = env.reset()
 
+    # Start each episode with an empty confidence window and fresh pilot state.
+    risk_aware_policy.reset()
     if hasattr(pilot, "reset"):
         pilot.reset()
 
@@ -51,9 +65,9 @@ def run_episode(env, pilot, copilot_model, mode: str):
     }
 
 
-def evaluate(mode: str, n_episodes: int = 50):
+def evaluate(mode: str, n_episodes: int = 50, pilot_name: str = "full"):
     env = SharedAutonomyEnv()
-    pilot = FullPilot("models/full_pilot.zip")
+    pilot = make_pilot(pilot_name)
     copilot_model = DQN.load("models/copilot.zip")
 
     results = []
@@ -81,5 +95,10 @@ def evaluate(mode: str, n_episodes: int = 50):
 
 
 if __name__ == "__main__":
-    for mode in ["pilot", "copilot", "risk_aware"]:
-        evaluate(mode, n_episodes=50)
+    for pilot_name in ["full", "sensor"]:
+        print(f"\n==============================")
+        print(f"Evaluating with {pilot_name} pilot")
+        print(f"==============================")
+
+        for mode in ["pilot", "copilot", "risk_aware"]:
+            evaluate(mode, n_episodes=50, pilot_name=pilot_name)

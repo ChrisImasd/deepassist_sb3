@@ -7,7 +7,7 @@ from copilot_env import CopilotEnv
 from full_pilot import FullPilot
 from pilot_policies import LaggyPilot, NoisyPilot, noop_pilot, sensor_pilot
 
-TOTAL_TIMESTEPS = 500_000
+TOTAL_TIMESTEPS = 500000
 MODEL_PATH = Path("models/copilot.zip")
 
 

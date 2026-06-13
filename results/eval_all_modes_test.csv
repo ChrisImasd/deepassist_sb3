@@ -1,0 +1,5 @@
+pilot,mode,seed,episode,reward,success,crash,intervention_rate,mean_alpha
+FullPilot,human_only,0,0,312.1757337275747,True,False,0.0,
+FullPilot,autonomous,0,0,313.17241356579785,True,False,1.0,
+FullPilot,fixed_shared,0,0,303.4648248846461,True,False,0.42196531791907516,0.5999999999999999
+FullPilot,adaptive_shared,0,0,306.61373305331927,True,False,0.4451219512195122,0.32712532267938377
